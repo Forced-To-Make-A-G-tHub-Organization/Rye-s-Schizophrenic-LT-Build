@@ -374,12 +374,14 @@ class InfoMenuState(State):
         portrait_surf = self.portrait_surf.copy()
 
         # If no portrait for this unit, either create one or default to class card using icons.get_portrait
+        default_icon = False
         if not self.current_portrait:
             portrait = RESOURCES.portraits.get(self.unit.portrait_nid)
             if portrait:
                 self.current_portrait = InfoMenuPortrait(portrait, DB.constants.value('info_menu_blink'))
             else:
                 im, offset = icons.get_portrait(self.unit)
+                default_icon = True
         # We do have a portrait, so update...
         if self.current_portrait:
             self.current_portrait.update()
@@ -389,7 +391,10 @@ class InfoMenuState(State):
         if im:
             x_pos = (im.get_width() - 96)//2
             im_surf = engine.subsurface(im, (x_pos, offset, 96, 136))
-            portrait_surf.blit(im_surf, (0, 56))
+            if default_icon:
+                portrait_surf.blit(im_surf, (8, 60))
+            else:
+                portrait_surf.blit(im_surf, (0, 56))
 
         # Stick it on the surface
         if self.transparency:
