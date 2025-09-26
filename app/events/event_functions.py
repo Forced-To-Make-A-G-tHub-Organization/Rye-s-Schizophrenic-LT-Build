@@ -2928,7 +2928,7 @@ def set_custom_options(self: Event, custom_options: List[str], custom_options_en
 
     action.do(action.SetGameVar('_custom_additional_options', options_list))
 
-def shop(self: Event, unit, item_list: List[str], shop_flavor=None, stock_list: List[int]=None, shop_id=None, flags=None):
+def shop(self: Event, unit, item_list: List[str], shop_keeper=None, stock_list: List[int]=None, shop_id=None, flags=None):
     new_unit = self._get_unit(unit)
     if not new_unit:
         self.logger.error("shop: Must have a unit visit the shop!")
@@ -2941,8 +2941,8 @@ def shop(self: Event, unit, item_list: List[str], shop_flavor=None, stock_list: 
     shop_items = item_funcs.create_items(unit, item_list)
     self.game.memory['shop_items'] = shop_items
 
-    if shop_flavor:
-        self.game.memory['shopkeeper'] = shop_flavor
+    if shop_keeper:
+        self.game.memory['shopkeeper'] = shop_keeper
     else:
         self.game.memory['shopkeeper'] = 'Rinnosuke'
 

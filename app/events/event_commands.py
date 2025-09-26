@@ -2818,8 +2818,8 @@ The optional *ShopId* keyword is available if you want to save what was bought f
         """
 
     keywords = ["Unit", "ItemList"]
-    optional_keywords = ["ShopFlavor", "StockList", "ShopId"]
-    keyword_types = ["Unit", "ItemList", "ShopFlavor", "IntegerList", "Nid"]
+    optional_keywords = ["ShopKeeper", "StockList", "ShopId"]
+    keyword_types = ["Unit", "ItemList", "Portrait", "IntegerList", "Nid"]
 
 class Choice(EventCommand):
     nid = 'choice'

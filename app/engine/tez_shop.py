@@ -47,7 +47,7 @@ class TezukaShopState(State):
         self.shop_id = game.memory['shop_id']
         self.desc_idx = 0
         self.desc_array = []
-        self.display_name = game.get_unit(self.shopkeeper).name if game.get_unit(self.shopkeeper) else 'Rinnosuke'
+        self.display_name = game.get_unit(self.shopkeeper).name if game.get_unit(self.shopkeeper) else self.shopkeeper or 'Rinnosuke'
         self.opening_message = 'shop_opener'
         self.buy_message = 'shop_buy'
         self.back_message = 'shop_back'
@@ -313,9 +313,9 @@ class TezukaShopState(State):
             
         if not self.current_portrait:
             portrait = RESOURCES.portraits.get('Rinnosuke')
-            self.current_portrait = InfoMenuPortrait(portrait, DB.constants.value('info_menu_blink'), True)
             if self.shopkeeper:
                 portrait = RESOURCES.portraits.get(self.shopkeeper)
+            self.current_portrait = InfoMenuPortrait(portrait, DB.constants.value('info_menu_blink'), True)
 
         # We do have a portrait, so update...
         if self.current_portrait:
