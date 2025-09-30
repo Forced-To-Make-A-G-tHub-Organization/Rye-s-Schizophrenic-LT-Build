@@ -60,6 +60,20 @@ class TezukaShopState(State):
         self.sell_again_message = 'shop_sell_again'
         self.again_message = 'shop_again'
         self.no_value_message = 'shop_no_value'
+        message_data = DB.raw_data.get('Shopkeepers').get(self.shopkeeper)
+        if message_data:
+            self.opening_message = '{d:Shopkeepers.'+self.shopkeeper+'.opener}'
+            self.buy_message = '{d:Shopkeepers.'+self.shopkeeper+'.buy}'
+            self.back_message = '{d:Shopkeepers.'+self.shopkeeper+'.back}'
+            self.leave_message = '{d:Shopkeepers.'+self.shopkeeper+'.leave}'
+            self.buy_again_message = '{d:Shopkeepers.'+self.shopkeeper+'.buy_again}'
+            self.convoy_message = '{d:Shopkeepers.'+self.shopkeeper+'.convoy}'
+            self.no_stock_message = '{d:Shopkeepers.'+self.shopkeeper+'.no_stock}'
+            self.no_money_message = '{d:Shopkeepers.'+self.shopkeeper+'.no_money}'
+            self.max_inventory_message = '{d:Shopkeepers.'+self.shopkeeper+'.max_inventory}'
+            self.sell_again_message = '{d:Shopkeepers.'+self.shopkeeper+'.sell_again}'
+            self.again_message = '{d:Shopkeepers.'+self.shopkeeper+'.again}'
+            self.no_value_message = '{d:Shopkeepers.'+self.shopkeeper+'.no_value}'
 
         self.current_portrait = None
         
@@ -435,7 +449,7 @@ class TezukaShopState(State):
             typ = item_system.weapon_type(self.unit, item)
             rnk = ''
             if typ:
-                rnk = item_system.weapon_rank(self.unit, item)
+                rnk = item_system.weapon_rank(self.unit, item) or '-'
             
             weapon_bg = SPRITES.get('tez_bottom_left')
             surf.blit(weapon_bg, (0, 107))
