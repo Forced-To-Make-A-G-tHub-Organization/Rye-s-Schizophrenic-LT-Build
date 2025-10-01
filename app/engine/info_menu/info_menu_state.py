@@ -528,11 +528,6 @@ class InfoMenuState(State):
                 if not self.personal_data_surf:
                     self.personal_data_surf = self.create_personal_data_surf()
                 self.draw_personal_data_surf(main_surf)
-            if DB.constants.value('fatigue') and self.unit.team == 'player' and not [x for x in self.unit.skills if x.nid == 'NoFatigue'] and \
-                    game.game_vars.get('_fatigue'):
-                if not self.fatigue_surf:
-                    self.fatigue_surf = self.create_fatigue_surf()
-                self.draw_fatigue_surf(main_surf)
 
         elif self.state == 'equipment':
             if not self.equipment_surf:
@@ -980,24 +975,6 @@ class InfoMenuState(State):
 
     def draw_support_surf(self, surf):
         surf.blit(self.support_surf, (96, 0))
-
-    def create_fatigue_surf(self):
-        surf = engine.create_surface((WINWIDTH - 96, WINHEIGHT), transparent=True)
-        max_fatigue = max(1, self.unit.get_max_fatigue())
-        fatigue = self.unit.get_fatigue()
-        build_groove(surf, (27, WINHEIGHT - 9), 88, utils.clamp(fatigue / max_fatigue, 0, 1))
-        x_pos = 27 + 88 // 2
-        text = str(fatigue) + '/' + str(max_fatigue)
-        x_pos -= text_width('text', text)//2
-        render_text(surf, ['text'], [text], ['blue'], (x_pos, WINHEIGHT - 17))
-        if fatigue >= max_fatigue:
-            render_text(surf, ['text'], [str(fatigue)], ['red'], (x_pos, WINHEIGHT - 17))
-        render_text(surf, ['text'], [text_funcs.translate('Ftg')], ['yellow'], (8, WINHEIGHT - 17))
-
-        return surf
-
-    def draw_fatigue_surf(self, surf):
-        surf.blit(self.fatigue_surf, (96, 0))
 
     def create_notes_surf(self):
         # Menu background
