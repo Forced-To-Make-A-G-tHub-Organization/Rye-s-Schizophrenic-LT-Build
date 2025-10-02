@@ -365,7 +365,7 @@ class TezukaShopState(State):
                 desc = item_system.hover_description(self.unit, item)
             elif item.desc:
                 desc = item.desc
-            elif not available:
+            elif not item_system.available(self.unit, item):
                 desc = "Cannot wield."
             else:
                 desc = ""
