@@ -2958,6 +2958,16 @@ def shop(self: Event, unit, item_list: List[str], shop_keeper=None, stock_list: 
 
     self.game.state.change('tez_shop')
     self.state = 'paused'
+    
+def repair_shop(self: Event, unit, item_list: List[str], shop_keeper=None, stock_list: List[int]=None, shop_id=None, flags=None):
+    new_unit = self._get_unit(unit)
+    if not new_unit:
+        self.logger.error("shop: Must have a unit visit the shop!")
+        return
+    unit = new_unit
+
+    self.game.state.change('repair_shop')
+    self.state = 'paused'
 
 def choice(self: Event, nid: NID, title: str, choices: TableRows, row_width: int = 0, orientation: Orientation = Orientation.VERTICAL,
            alignment: Alignments = Alignments.CENTER, bg: str = 'menu_bg_base', event_nid: str = None, entry_type: str = 'str',

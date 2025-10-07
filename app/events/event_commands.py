@@ -2820,6 +2820,18 @@ The optional *ShopId* keyword is available if you want to save what was bought f
     keywords = ["Unit", "ItemList"]
     optional_keywords = ["ShopKeeper", "StockList", "ShopId"]
     keyword_types = ["Unit", "ItemList", "Portrait", "IntegerList", "Nid"]
+    
+class RepairShop(EventCommand):
+    nid = 'repair_shop'
+    tag = Tags.MISCELLANEOUS
+
+    desc = \
+        """
+Causes *Unit* to enter the repair shop.
+        """
+
+    keywords = ["Unit"]
+    keyword_types = ["Unit"]
 
 class Choice(EventCommand):
     nid = 'choice'
