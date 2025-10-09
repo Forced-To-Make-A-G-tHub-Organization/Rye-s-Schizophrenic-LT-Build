@@ -690,6 +690,8 @@ class Choice(Simple):
         return idxs, rects
         
 class TezukaChoice(Choice):
+    convoy_toggle = False
+
     def draw(self, surf, aframe=0):
         if self.horizontal:
             surf = self.horiz_draw(surf, aframe=aframe)
@@ -722,6 +724,12 @@ class TezukaChoice(Choice):
                     elif aframe >= 55:
                         highlight_flicker = SPRITES.get('tez_buy_sell_highlight_2')
                         surf.blit(highlight_flicker, (left - 6, top + 2))
+                if choice.text == 'Convoy' and self.convoy_toggle:
+                    choice.color = 'red'
+                else:
+                    choice.color = 'white'
+                if choice.text == 'Convoy':
+                    left = left - 6
                 choice.draw(surf, left, top)
 
                 running_width += choice.width() + 8

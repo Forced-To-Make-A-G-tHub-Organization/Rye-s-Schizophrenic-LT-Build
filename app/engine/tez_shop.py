@@ -207,6 +207,7 @@ class TezukaShopState(State):
                     self.update_desc()
                 elif current == 'Convoy':
                     self.convoy_toggle = not self.convoy_toggle
+                    self.choice_menu.convoy_toggle = self.convoy_toggle
                     self.update_options()
 
             elif self.state == 'buy':
@@ -447,10 +448,7 @@ class TezukaShopState(State):
 
         FONT['text-white'].blit_right(str(game.get_money()) + ' G', surf, (61, 0))
         self.money_counter_disp.draw(surf)
-        if self.convoy_toggle:
-            FONT['text-red'].blit(str(self.display_name), surf, (2, 90))
-        else:
-            FONT['text-white'].blit(str(self.display_name), surf, (2, 90))
+        FONT['text-white'].blit(str(self.display_name), surf, (2, 90))
 
         # Draw bottom text
         item = None
