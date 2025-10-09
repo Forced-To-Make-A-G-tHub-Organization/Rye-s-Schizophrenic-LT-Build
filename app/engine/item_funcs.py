@@ -186,6 +186,7 @@ def repair_price(unit: UnitObject, item: ItemObject) -> int:
         charges_used = item.data['starting_uses'] - item.data['uses']
         cost_per_charge = buy_price(unit, item) / item.data['uses']
         repair_cost = math.ceil(charges_used * cost_per_charge)
+        repair_cost *= 3
     return int(repair_cost)
 
 def create_item(unit, item_nid, droppable: bool = False, parent: ItemObject = None, 
