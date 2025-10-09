@@ -60,6 +60,7 @@ class TezukaShopState(State):
         self.sell_again_message = 'shop_sell_again'
         self.again_message = 'shop_again'
         self.no_value_message = 'shop_no_value'
+        self.convoy_toggle = False
         message_data = DB.raw_data.get('Shopkeepers').get(self.shopkeeper)
         if message_data:
             self.opening_message = '{d:Shopkeepers.'+self.shopkeeper+'.opener}'
@@ -78,8 +79,13 @@ class TezukaShopState(State):
         self.current_portrait = None
         
         self.choice_menu = menus.TezukaChoice(self.unit, ["Buy", "Sell"], (165, 135), background=None)
-        self.choice_menu.set_horizontal(True)
         self.choice_menu.set_color(['text-white', 'text-white'])
+        if game.game_vars.get('_convoy'):
+            self.choice_menu = menus.TezukaChoice(self.unit, ["Buy", "Sell", "Convoy"], (120, 135), background=None)
+            self.choice_menu.set_color(['text-white', 'text-white', 'text-white'])
+            
+        self.choice_menu.set_horizontal(True)
+        
         self.choice_menu.set_highlight(False)
         self.choice_menu.set_width(30)
 
@@ -132,8 +138,12 @@ class TezukaShopState(State):
         return d
 
     def update_options(self):
-        self.sell_menu.update_options(item_funcs.get_all_tradeable_items(self.unit))
-        self.sell_menu_2.update_options(item_funcs.get_all_tradeable_items(self.unit))
+        if self.convoy_toggle:
+            self.sell_menu.update_options([x for x in game.party.convoy if item_system.tradeable(self.unit, x)])
+            self.sell_menu_2.update_options([x for x in game.party.convoy if item_system.tradeable(self.unit, x)])
+        else:
+            self.sell_menu.update_options(item_funcs.get_all_tradeable_items(self.unit))
+            self.sell_menu_2.update_options(item_funcs.get_all_tradeable_items(self.unit))
 
     def take_input(self, event):
         first_push = self.fluid.update()
@@ -195,6 +205,9 @@ class TezukaShopState(State):
                     self.sell_menu.set_takes_input(True)
                     self.current_msg = None
                     self.update_desc()
+                elif current == 'Convoy':
+                    self.convoy_toggle = not self.convoy_toggle
+                    self.update_options()
 
             elif self.state == 'buy':
                 item = self.buy_menu.get_current()
@@ -214,7 +227,7 @@ class TezukaShopState(State):
                         self.buy_menu.decrement_stock()
                         self.money_counter_disp.start(-value)
                         game.register_item(new_item)
-                        if not item_funcs.inventory_full(self.unit, new_item):
+                        if not self.convoy_toggle and not item_funcs.inventory_full(self.unit, new_item):
                             action.do(action.GiveItem(self.unit, new_item))
                             self.current_msg = self.get_dialog(self.buy_again_message)
                         elif game.game_vars.get('_convoy'):
@@ -246,7 +259,10 @@ class TezukaShopState(State):
                         action.do(action.GainMoney(game.current_party, value))
                         action.do(action.UpdateRecords('money', (game.current_party, value)))
                         self.money_counter_disp.start(value)
-                        action.do(action.RemoveItem(self.unit, item))
+                        if self.convoy_toggle:
+                            action.do(action.RemoveItemFromConvoy(item))
+                        else:
+                            action.do(action.RemoveItem(self.unit, item))
                         self.current_msg = self.get_dialog(self.sell_again_message)
                         self.update_options()
                     else:
@@ -431,7 +447,10 @@ class TezukaShopState(State):
 
         FONT['text-white'].blit_right(str(game.get_money()) + ' G', surf, (61, 0))
         self.money_counter_disp.draw(surf)
-        FONT['text-white'].blit(str(self.display_name), surf, (2, 90))
+        if self.convoy_toggle:
+            FONT['text-red'].blit(str(self.display_name), surf, (2, 90))
+        else:
+            FONT['text-white'].blit(str(self.display_name), surf, (2, 90))
 
         # Draw bottom text
         item = None
