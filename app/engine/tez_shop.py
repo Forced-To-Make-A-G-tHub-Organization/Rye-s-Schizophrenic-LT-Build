@@ -97,13 +97,13 @@ class TezukaShopState(State):
         self.sell_menu_2 = menus.Shop(self.unit, my_items, topleft=(95, 4), disp_value='sell')
         self.buy_menu_2 = menus.Shop(self.unit, items, topleft=(95, 4), disp_value='buy', stock=self.stock)
         self.sell_menu.set_limit(6)
-        self.sell_menu.set_hard_limit(True)
+        self.sell_menu.set_hard_limit(False)
         self.sell_menu_2.set_limit(6)
-        self.sell_menu_2.set_hard_limit(True)
+        self.sell_menu_2.set_hard_limit(False)
         self.buy_menu.set_limit(6)
-        self.buy_menu.set_hard_limit(True)
+        self.buy_menu.set_hard_limit(False)
         self.buy_menu_2.set_limit(6)
-        self.buy_menu_2.set_hard_limit(True)
+        self.buy_menu_2.set_hard_limit(False)
         self.menu = None  # For input
 
         self.state = 'open'
@@ -139,8 +139,10 @@ class TezukaShopState(State):
 
     def update_options(self):
         if self.convoy_toggle:
+            print(str(len([x for x in game.party.convoy if item_system.tradeable(self.unit, x)])))
             self.sell_menu.update_options([x for x in game.party.convoy if item_system.tradeable(self.unit, x)])
             self.sell_menu_2.update_options([x for x in game.party.convoy if item_system.tradeable(self.unit, x)])
+            print(str(len(self.sell_menu.options)))
         else:
             self.sell_menu.update_options(item_funcs.get_all_tradeable_items(self.unit))
             self.sell_menu_2.update_options(item_funcs.get_all_tradeable_items(self.unit))
@@ -199,7 +201,7 @@ class TezukaShopState(State):
                     self.current_msg = None
                     self.buy_menu.set_takes_input(True)
                     self.update_desc()
-                elif current == 'Sell' and item_funcs.get_all_tradeable_items(self.unit):
+                elif current == 'Sell' and ((not self.convoy_toggle and item_funcs.get_all_tradeable_items(self.unit)) or (self.convoy_toggle and ([x for x in game.party.convoy if item_system.tradeable(self.unit, x)]))):
                     self.menu = self.sell_menu
                     self.state = 'sell'
                     self.sell_menu.set_takes_input(True)

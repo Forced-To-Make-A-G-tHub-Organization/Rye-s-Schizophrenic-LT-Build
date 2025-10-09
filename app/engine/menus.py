@@ -887,6 +887,11 @@ class TezukaShop(Choice):
                 option = menu_options.EmptyOption(len(options) + num)
                 self.options.append(option)
                 
+    def draw_scroll_bar(self, surf, topleft):
+        right = topleft[0] + self.get_menu_width()
+        topright = (right, topleft[1])
+        self.scroll_bar.draw(surf, topright, self.scroll, 2, -1 * len(self.options) // -3, option_height=48)
+                
     def draw(self, surf, aframe=0):
         surf = self._draw(surf, aframe=aframe)
         return surf
@@ -1105,7 +1110,7 @@ class TezukaShop(Choice):
             self.current_index -= 1
             if self.current_index < 0:
                 self.current_index = len(self.options) - 1
-                self.scroll = self.current_index - self.limit + 1
+                self.scroll = max(0, self.current_index // 3 - 1)
             elif self.current_index < self.scroll * 3:
                 self.scroll -= 1
             else:
@@ -1131,7 +1136,7 @@ class TezukaShop(Choice):
                 self.current_index = max(0, self.current_index)
             if self.current_index < 0:
                 self.current_index = len(self.options) - 1
-                self.scroll = self.current_index - self.limit + 1
+                self.scroll = max(0, self.current_index // 3 - 1)
             elif self.current_index < self.scroll * 3:
                 self.scroll -= 1
             else:
