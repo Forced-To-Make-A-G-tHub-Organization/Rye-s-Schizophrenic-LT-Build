@@ -380,7 +380,10 @@ class SimpleCombat():
                             flags = None
                         else:
                             flags = {'no_banner'}
-                        command = event_commands.GiveItem({'GlobalUnitOrConvoy': '{unit}', 'Item': str(item.uid)}, flags)
+                        if 'DropToConvoy' in self.attacker.tags:
+                            command = event_commands.GiveItem({'GlobalUnitOrConvoy': 'convoy', 'Item': str(item.uid)}, flags)
+                        else:
+                            command = event_commands.GiveItem({'GlobalUnitOrConvoy': '{unit}', 'Item': str(item.uid)}, flags)
                         trigger = triggers.GenericTrigger(self.attacker, unit, self.attacker.position, {'item_uid': item.uid})
                         game.events._add_event_from_script(event_nid, str(command), trigger)
                         counter += 1
@@ -399,7 +402,10 @@ class SimpleCombat():
                         flags = None
                     else:
                         flags = {'no_banner'}
-                    command = event_commands.GiveItem({'GlobalUnitOrConvoy': '{unit}', 'Item': str(item.uid)}, flags)
+                    if 'DropToConvoy' in self.defender.tags:
+                        command = event_commands.GiveItem({'GlobalUnitOrConvoy': 'convoy', 'Item': str(item.uid)}, flags)
+                    else:
+                        command = event_commands.GiveItem({'GlobalUnitOrConvoy': '{unit}', 'Item': str(item.uid)}, flags)
                     trigger = triggers.GenericTrigger(self.defender, self.attacker, self.defender.position, {'item_uid': item.uid})
                     game.events._add_event_from_script(event_nid, str(command), trigger)
                     counter += 1
