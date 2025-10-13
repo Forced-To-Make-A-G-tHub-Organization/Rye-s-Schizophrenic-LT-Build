@@ -241,9 +241,6 @@ class InfoMenuState(State):
         else:
             return
         self.next_unit = self.scroll_units[new_index]
-        if self.state == 'notes' and not (DB.constants.value('unit_notes') and self.next_unit.notes):
-            self.state = 'personal_data'
-            self.switch_logo('personal_data')
         self.transition = 'UP'
 
     def move_up(self):
@@ -257,18 +254,12 @@ class InfoMenuState(State):
         else:
             return
         self.next_unit = self.scroll_units[new_index]
-        if self.state == 'notes' and not (DB.constants.value('unit_notes') and self.next_unit.notes):
-            self.state = 'personal_data'
-            self.switch_logo('personal_data')
         self.transition = 'DOWN'
 
     def move_traveler(self):
         get_sound_thread().play_sfx('Status_Character')
         self.rescuer = self.unit
         self.next_unit = game.get_unit(self.unit.traveler)
-        if self.state == 'notes' and not (DB.constants.value('unit_notes') and self.next_unit.notes):
-            self.state = 'personal_data'
-            self.switch_logo('personal_data')
         self.transition = 'DOWN'
 
     def handle_mouse(self):
