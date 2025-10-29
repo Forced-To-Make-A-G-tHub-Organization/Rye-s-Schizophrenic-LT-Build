@@ -480,13 +480,13 @@ class UnitSprite():
             pass # Handled in movement system
         elif self.state == 'fake_transition_in':
             if self.offset[0] > 0:
-                self.offset[0] -= max(1,abs(self.offset[0]//TILEWIDTH))
+                self.offset[0] -= max(2,(abs(self.offset[0]//TILEWIDTH)//2)*4)
             elif self.offset[0] < 0:
-                self.offset[0] += max(1,abs(self.offset[0]//TILEWIDTH))
+                self.offset[0] += max(2,(abs(self.offset[0]//TILEWIDTH)//2)*4)
             if self.offset[1] > 0:
-                self.offset[1] -= max(1,abs(self.offset[1]//TILEHEIGHT))
+                self.offset[1] -= max(2,(abs(self.offset[1]//TILEHEIGHT)//2)*4)
             elif self.offset[1] < 0:
-                self.offset[1] += max(1,abs(self.offset[1]//TILEHEIGHT))
+                self.offset[1] += max(2,(abs(self.offset[1]//TILEHEIGHT)//2)*4)
 
             if self.offset[0] == 0 and self.offset[1] == 0:
                 self.set_transition('normal')
