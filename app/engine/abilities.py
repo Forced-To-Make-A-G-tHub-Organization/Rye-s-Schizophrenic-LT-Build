@@ -290,6 +290,8 @@ class SupplyAbility(Ability):
 
     @staticmethod
     def targets(unit) -> set:
+        if 'PreventConvoy' in unit.tags:
+            return set()
         if game.game_vars.get('_convoy'):
             adj_allies = game.target_system.get_adj_allies(unit)
             if 'Convoy' in unit.tags:
