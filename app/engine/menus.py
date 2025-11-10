@@ -1166,6 +1166,49 @@ class TezukaShop(Choice):
 
 class RepairShop(Shop):
     default_option = menu_options.RepairValueItemOption
+    
+    def __init__(self, owner, options, topleft=None, disp_value='sell', background='menu_bg_base', info=None, stock=None):
+        super().__init__(owner, options, topleft, background, info, stock)
+        self.background = 'menu_bg_base'
+        
+    def vert_draw(self, surf, offset=None):
+        topleft = self.get_topleft()
+        if offset:
+            topleft = (topleft[0] + offset[0], topleft[1] + offset[1])
+
+        bg_surf = self.create_bg_surf()
+        surf.blit(bg_surf, (topleft[0] - 2, topleft[1] - 4))
+
+        draw_scroll_bar = False
+        if len(self.options) > self.limit:
+            draw_scroll_bar = True
+            self.draw_scroll_bar(surf, topleft)
+
+        start_index = self.scroll
+        end_index = self.scroll + self.limit
+        choices = self.options[start_index:end_index]
+        running_height = self.y_offset
+        menu_width = self.get_menu_width()
+        if choices:
+            for idx, choice in enumerate(choices):
+                top = topleft[1] + 4 + running_height
+                left = topleft[0]
+
+                if self.highlight and idx + self.scroll == self.current_index and self.takes_input and self.draw_cursor:
+                    choice.draw_highlight(surf, left, top, menu_width - 8 if draw_scroll_bar else menu_width)
+                # elif self.highlight and idx + self.scroll == self.fake_cursor_idx:
+                    # choice.draw_highlight(surf, left, top, menu_width)
+                else:
+                    choice.draw(surf, left, top)
+                if idx + self.scroll == self.fake_cursor_idx:
+                    self.stationary_cursor.draw(surf, left, top)
+                if idx + self.scroll == self.current_index and self.takes_input and self.draw_cursor:
+                    self.cursor.draw(surf, left, top)
+
+                running_height += choice.height()
+        else:
+            FONT['text-grey'].blit("Nothing", surf, (self.topleft[0] + 16, self.topleft[1] + 4))
+        return surf
 
 class Trade(Simple):
     """

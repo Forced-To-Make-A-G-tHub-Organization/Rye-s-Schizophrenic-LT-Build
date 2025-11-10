@@ -2959,13 +2959,12 @@ def shop(self: Event, unit, item_list: List[str], shop_keeper=None, stock_list: 
     self.game.state.change('tez_shop')
     self.state = 'paused'
     
-def repair_shop(self: Event, unit, item_list: List[str], shop_keeper=None, stock_list: List[int]=None, shop_id=None, flags=None):
+def repair_shop(self: Event, unit, flags=None):
     new_unit = self._get_unit(unit)
     if not new_unit:
         self.logger.error("shop: Must have a unit visit the shop!")
         return
-    unit = new_unit
-
+    self.game.memory['repair_unit'] = new_unit
     self.game.state.change('repair_shop')
     self.state = 'paused'
 

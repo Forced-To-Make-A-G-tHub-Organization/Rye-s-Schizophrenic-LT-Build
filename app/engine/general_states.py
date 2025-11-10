@@ -2972,7 +2972,11 @@ class RepairShopState(ShopState):
     def start(self):
         self.fluid = FluidScroll()
 
-        self.unit = game.memory['current_unit']
+        if game.memory.get('repair_unit'):
+            self.unit = game.memory['repair_unit']
+            game.memory['repair_unit'] = None
+        else:
+            self.unit = game.memory['current_unit']
 
         def apply_flavor(string: str) -> str:
             if (string % 'repair') in DB.translations:
