@@ -874,9 +874,6 @@ class PrepManageSelectState(State):
         self.current_index = self.menu.current_index
 
         options = ['Trade', 'Restock', 'Give all', 'Optimize', 'Use', 'Market']
-        # Replace Optimize with Repair when the repair shop is available
-        if DB.constants.value('repair_shop'):
-            options[3] = 'Repair'
         # Replace Use with Items when the convoy is available
         if game.game_vars.get('_convoy'):
             options[4] = 'Items'
