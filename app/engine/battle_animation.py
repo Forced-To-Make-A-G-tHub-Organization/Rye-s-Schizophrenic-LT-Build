@@ -265,7 +265,9 @@ class BattleAnimation():
             self.start_anim('Dodge')
 
     def damaged(self):
-        if self.at_range:
+        if skill_system.defensive_anim(self.unit):
+            self.start_anim(skill_system.defensive_anim(self.unit))
+        elif self.at_range:
             self.start_anim('RangedDamaged')
         else:
             self.start_anim('Damaged')

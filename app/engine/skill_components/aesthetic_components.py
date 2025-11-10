@@ -23,6 +23,16 @@ class UnitAnim(SkillComponent):
 
     def should_draw_anim(self, unit, skill):
         return self.value
+        
+class DefensiveAnim(SkillComponent):
+    nid = 'defensive_anim'
+    desc = "Changes pose when unit is hit"
+    tag = SkillTags.AESTHETIC
+
+    expose = ComponentType.String
+
+    def defensive_anim(self, unit):
+        return self.value
 
 class UnitTint(SkillComponent):
     nid = 'unit_tint'

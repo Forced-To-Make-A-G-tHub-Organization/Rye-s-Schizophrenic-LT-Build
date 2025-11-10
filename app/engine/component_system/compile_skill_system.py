@@ -147,6 +147,7 @@ SKILL_HOOKS: Dict[str, HookInfo] = {
     'usable_wtypes':                        HookInfo(['unit'], ResolvePolicy.UNION),
     'forbidden_wtypes':                     HookInfo(['unit'], ResolvePolicy.UNION),
     'target_icon':                          HookInfo(['unit', 'icon_unit'], ResolvePolicy.UNION),
+    'defensive_anim':                       HookInfo(['unit'], ResolvePolicy.UNIQUE),
 }
 
 def generate_skill_hook_str(hook_name: str, hook_info: HookInfo):
