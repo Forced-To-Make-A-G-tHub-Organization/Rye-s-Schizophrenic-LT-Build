@@ -36,7 +36,7 @@ class ChapterTitleState(State):
             if song:
                 self.music_flag = True
         if not self.music_flag:
-            song = get_sound_thread().fade_in('Chapter Sound')
+            song = get_sound_thread().fade_in('_Chapter Sound')
             if song:
                 self.music_flag = True
 
