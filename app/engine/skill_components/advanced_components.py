@@ -223,8 +223,13 @@ class DefenseProc(SkillComponent):
 
     expose = ComponentType.Skill
     _did_action = False
+    _played_conditional = False
 
     def start_sub_combat(self, actions, playback, unit, item, target, item2, mode, attack_info):
+        self._played_conditional = True
+        if self._did_action:
+            action.do(action.RemoveSkill(unit, self.value))
+        self._did_action = False
         if mode == 'defense' and target and skill_system.check_enemy(unit, target):
             if not get_weapon_filter(self.skill, unit, item):
                 return
@@ -234,11 +239,19 @@ class DefenseProc(SkillComponent):
                 action.do(act)
                 if act.skill_obj:
                     playback.append(pb.DefenseProc(unit, act.skill_obj))
+                    action.do(action.TriggerCharge(unit, self.skill))
                 self._did_action = True
-
-    def end_sub_combat_unconditional(self, actions, playback, unit, item, target, item2, mode, attack_info):
+                
+    def start_sub_combat_unconditional(self, actions, playback, unit, item, target, item2, mode, attack_info):
+        if self._played_conditional:
+            self._played_conditional = False
+            return
         if self._did_action:
-            action.do(action.TriggerCharge(unit, self.skill))
+            action.do(action.RemoveSkill(unit, self.value))
+        self._did_action = False
+
+    def end_combat_unconditional(self, playback, unit, item, target, item2, mode):
+        if self._did_action:
             action.do(action.RemoveSkill(unit, self.value))
         self._did_action = False
 
