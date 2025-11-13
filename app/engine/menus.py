@@ -1836,7 +1836,7 @@ class Convoy():
         for w_type in self.order:
             if w_type != 'Default':
                 sorted_dict[w_type] = [item for item in all_items if item_system.weapon_type(self.unit, item) == w_type]
-        sorted_dict['Default'] = [item for item in all_items if item_system.weapon_type(self.unit, item) is None]
+        sorted_dict['Default'] = [item for item in all_items if item_system.weapon_type(self.unit, item) is None or item_system.weapon_type(self.unit, item) not in self.order]
         for key, value in sorted_dict.items():
             value.sort(key=lambda item: item_system.special_sort(self.unit, item) or 0)
             value.sort(key=lambda item: item.name)
@@ -1898,7 +1898,8 @@ class Convoy():
     def move_to_item_type(self, item):
         wtype = item_system.weapon_type(self.unit, item)
         if wtype:
-            self.menu_index = self.order.index(wtype)
+            if wtype in self.order:
+                 self.menu_index = self.order.index(wtype)
         else:
             self.menu_index = len(self.order) - 1
         self.goto_flag = True
