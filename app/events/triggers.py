@@ -196,6 +196,14 @@ class UnitDeselect(EventTrigger):
     nid: ClassVar[NID] = 'unit_deselect'
     unit1: UnitObject
     position: Tuple[int, int] #: the position they were deselected at.
+    
+@dataclass(init=True)
+class UnitEXP(EventTrigger):
+    """
+    Occurs whenever a unit unit gains experience.
+    """
+    nid: ClassVar[NID] = 'unit_exp'
+    unit1: UnitObject #: the unit that increased experience.
 
 @dataclass(init=True)
 class UnitLevelUp(EventTrigger):

@@ -202,6 +202,7 @@ class ExpState(State):
                 if self.mana_to_gain:
                     action.do(action.ChangeMana(self.unit, self.mana_to_gain))
                 action.do(action.UpdateRecords('exp_gain', (self.unit.nid, self.exp_gain, self.unit.klass)))
+                game.events.trigger(triggers.UnitEXP(self.unit))
                 self.state.back()
                 self.start_time = current_time
                 # If we're ready to leave
