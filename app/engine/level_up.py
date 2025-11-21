@@ -198,16 +198,16 @@ class ExpState(State):
         elif self.state.get_state() == 'exp_leave':
             done = self.exp_bar.update()
             if done:
+                action.do(action.GainExp(self.unit, self.exp_gain))
+                if self.mana_to_gain:
+                    action.do(action.ChangeMana(self.unit, self.mana_to_gain))
+                action.do(action.UpdateRecords('exp_gain', (self.unit.nid, self.exp_gain, self.unit.klass)))
                 self.state.back()
                 self.start_time = current_time
                 # If we're ready to leave
                 if len(self.state.state) <= 0:
                     game.state.back()
                 game.events.trigger(triggers.UnitEXP(self.unit))
-                action.do(action.GainExp(self.unit, self.exp_gain))
-                if self.mana_to_gain:
-                    action.do(action.ChangeMana(self.unit, self.mana_to_gain))
-                action.do(action.UpdateRecords('exp_gain', (self.unit.nid, self.exp_gain, self.unit.klass)))
                 # Otherwise, we're probably about to level up!
 
         elif self.state.get_state() == 'exp100':
