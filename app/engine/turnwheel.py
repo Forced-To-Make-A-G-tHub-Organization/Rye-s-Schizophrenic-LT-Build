@@ -483,13 +483,13 @@ class TurnwheelDisplay():
         FONT['text-blue'].blit_right(str(self.turn), turn_bg, (44, 3))
         surf.blit(turn_bg, (WINWIDTH - 52, 4 + self.transition))
         # Unit Count
-        count_bg = base_surf.create_base_surf(48, 24)
+        count_bg = base_surf.create_base_surf(96, 24)
         count_bg = image_mods.make_translucent(count_bg, .1)
         player_units = [unit for unit in game.units if unit.team == 'player' and unit.position]
         unused_units = [unit for unit in player_units if not unit.finished]
-        count_str = str(len(unused_units)) + "/" + str(len(player_units))
+        count_str = str(len(unused_units)) + "/" + str(len(player_units)) + " units free"
         count_width = FONT['text-blue'].width(count_str)
-        FONT['text-blue'].blit(count_str, count_bg, (24 - count_width/2, 3))
+        FONT['text-blue'].blit(count_str, count_bg, (48 - count_width/2, 3))
         surf.blit(count_bg, (4, WINHEIGHT - 28 - self.transition))
         # Num uses
         if game.game_vars.get('_max_turnwheel_uses', -1) > 0:
