@@ -12,7 +12,6 @@ class GrowthOption(str, Enum):
     PLAYER_CHOICE = 'Player Choice'
     RANDOM = 'Random'
     FIXED = 'Fixed'
-    DYNAMIC = 'Dynamic'
 
 class RNGOption(str, Enum):
     CLASSIC = 'Classic'
