@@ -171,6 +171,8 @@ class GameBoard(object):
 
     # === Fog of War ===
     def update_fow(self, pos: Optional[Pos], unit: UnitObject, sight_range: int):
+        if sight_range < 1:
+            sight_range = 1
         """Modifies the state of the fog of war game board to reflect the unit moving to the pos"""
         grid: Grid[List[UnitObject]] = self.fog_of_war_grids[unit.team]
         # Remove the old vision
