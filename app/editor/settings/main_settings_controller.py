@@ -16,7 +16,7 @@ class MainSettingsController():
     specific setting controllers for more tailored settings.
     """
 
-    def __init__(self, company='rainlash', product='Lex Talionis'):
+    def __init__(self, company='rye', product='rye'):
         QSettings.setDefaultFormat(QSettings.IniFormat)
         self.state = QSettings(company, product)
         self.component_controller = ComponentSettingsController(
