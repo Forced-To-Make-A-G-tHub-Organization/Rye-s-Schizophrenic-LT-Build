@@ -562,3 +562,8 @@ class EventAfterCombatEvenMiss(ItemComponent):
         if event_prefab:
             local_args = {'item': item, 'item2': item2, 'mode': mode}
             game.events.trigger_specific_event(event_prefab.nid, unit, target, unit.position, local_args)
+
+class SkipCombat(ItemComponent):
+    nid = 'skip_combat'
+    desc = 'This is what we in the business call a terrible idea.'
+    tag = ItemTags.SPECIAL

@@ -78,14 +78,14 @@ def engage(attacker: UnitObject, positions: list, main_item: ItemObject, skip: b
         combat = BaseCombat(attacker, main_item, attacker, script, total_rounds)
     elif skip:
         # If we are skipping
-        combat = SimpleCombat(attacker, main_item, items, target_positions, main_targets, splashes, script, total_rounds)
+        combat = SimpleCombat(attacker, main_item, items, target_positions, main_targets, splashes, script, total_rounds, skip_combat=main_item.skip_combat)
         game.highlight.remove_highlights()
     # If more than one target position or more than one item being used, cannot use animation combat
     elif len(positions) > 1 or len(items) > 1:
-        combat = MapCombat(attacker, main_item, items, target_positions, main_targets, splashes, script, total_rounds)
+        combat = MapCombat(attacker, main_item, items, target_positions, main_targets, splashes, script, total_rounds, skip_combat=main_item.skip_combat)
     # If affecting more than one target, cannot use animation combat
     elif not main_targets[0] or splashes[0]:
-        combat = MapCombat(attacker, main_item, items, target_positions, main_targets, splashes, script, total_rounds)
+        combat = MapCombat(attacker, main_item, items, target_positions, main_targets, splashes, script, total_rounds, skip_combat=main_item.skip_combat)
     elif has_animation(attacker, item, main_target, force_animation, force_no_animation):
         defender = game.board.get_unit(main_target)
         def_item = defender.get_weapon()

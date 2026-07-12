@@ -15,7 +15,7 @@ from app.engine.combat.simple_combat import SimpleCombat
 class MapCombat(SimpleCombat):
     alerts: bool = True
 
-    def __init__(self, attacker, main_item, items, positions, main_target_positions, splash_positions, script, total_rounds=1):
+    def __init__(self, attacker, main_item, items, positions, main_target_positions, splash_positions, script, total_rounds=1, skip_combat=False):
         self._full_setup(attacker, main_item, items, positions,
                          main_target_positions, splash_positions)
         self.state_machine = CombatPhaseSolver(
@@ -36,6 +36,7 @@ class MapCombat(SimpleCombat):
         self.health_bars = {}
 
         self.first_phase = True
+        self.skip_combat = skip_combat
         self.cast_pose = False
 
     def set_state(self, state: str):
@@ -74,7 +75,7 @@ class MapCombat(SimpleCombat):
                 return True
             self.actions, self.playback = self.state_machine.do()
             self.full_playback += self.playback
-            if not self.actions and not self.playback:
+            if self.skip_combat or (not self.actions and not self.playback):
                 self.state_machine.setup_next_state()
                 return False
             if not item_system.no_map_hp_display(self.attacker, self.main_item):
