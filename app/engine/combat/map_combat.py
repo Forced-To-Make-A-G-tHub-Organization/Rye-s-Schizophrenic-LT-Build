@@ -76,6 +76,8 @@ class MapCombat(SimpleCombat):
             self.actions, self.playback = self.state_machine.do()
             self.full_playback += self.playback
             if self.skip_combat or (not self.actions and not self.playback):
+                if self.actions:
+                    self._apply_actions()
                 self.state_machine.setup_next_state()
                 return False
             if not item_system.no_map_hp_display(self.attacker, self.main_item):
