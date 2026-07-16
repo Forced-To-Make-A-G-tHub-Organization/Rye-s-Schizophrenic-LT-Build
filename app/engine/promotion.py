@@ -13,6 +13,9 @@ from app.engine import background, menus, engine, dialog, text_funcs, icons, \
 from app.engine.combat.mock_combat import MockCombat
 from app.engine.game_state import game
 from app.engine.fluid_scroll import FluidScroll
+from app.engine.graphics.text.text_renderer import render_text, text_width, rendered_text_width
+from app.utilities.enums import HAlignment
+from app.engine.health_bar import CombatHealthBar
 
 class PromotionChoiceState(State):
     name = 'promotion_choice'
@@ -31,6 +34,7 @@ class PromotionChoiceState(State):
         game.memory['current_unit'] = self.unit
         game.memory['next_class'] = next_class
         game.memory['next_state'] = 'promotion'
+        game.memory['combat_item'] = self.combat_item
         game.state.change('transition_to_with_pop')
 
     def start(self):
@@ -247,6 +251,8 @@ class PromotionState(State, MockCombat):
 
         music = 'music_%s' % self.name
         self.promotion_song = None
+        self.combat_item = game.memory.get('combat_item')
+        game.memory['combat_item'] = None
         if game.game_vars.get('_' + music):
             self.promotion_song = \
                 get_sound_thread().fade_in(game.game_vars.get('_' + music), fade_in=50)
@@ -273,6 +279,23 @@ class PromotionState(State, MockCombat):
         self.name_tag = SPRITES.get('combat_name_right_' + color).copy()
         width = FONT['text-brown'].width(self.unit.name)
         FONT['text-brown'].blit(self.unit.name, self.name_tag, (36 - width // 2, 8))
+        
+        # Team
+        promotion_color = self.get_color(self.unit.team)
+        # Bar
+        self.promotion_bar = SPRITES.get('combat_main_crit_right_' + promotion_color).copy()
+        if self.combat_item:
+            name = self.combat_item.name
+            if text_width('text', name) > 56:
+                font = 'narrow'
+            else:
+                font = 'text'
+            render_text(self.promotion_bar, [font], [name], ['brown'], (WINWIDTH//4 - 13, 5 + 8), HAlignment.CENTER)
+            icon = icons.get_icon(self.combat_item)
+            if icon:
+                self.promotion_bar.blit(icon, (1 + 2, 9 + 4))
+                
+        self.promotion_hp_bar = CombatHealthBar(self.unit)
 
         # For darken backgrounds and drawing
         self.setup_dark()
@@ -356,6 +379,8 @@ class PromotionState(State, MockCombat):
 
         # Name Tag
         combat_surf.blit(self.name_tag, (WINWIDTH + 3 - self.name_tag.get_width(), 0))
+        self.promotion_hp_bar.draw(self.promotion_bar, 25, 30 + 7)
+        combat_surf.blit(self.promotion_bar, (WINWIDTH//2 - self.promotion_bar.get_width()//2, WINHEIGHT - self.promotion_bar.get_height()))
 
         self.color_ui(combat_surf)
 
