@@ -68,20 +68,35 @@ class CombatHealthBar(HealthBar):
         self.color_tick = 0
         self.heal_sound_update = 0
 
-    def update(self, skip=False):
+    def update(self, mute, skip=False):
         if self.displayed_hp < self.unit.get_hp():
             self.speed = utils.frames2ms(4)  # Slower speed when increasing hp
         else:
             self.speed = utils.frames2ms(2)
-        super().update()
+
+        if self.displayed_hp != self.unit.get_hp() and not self.transition_flag:
+            self.transition_flag = True
+            self.time_for_change = max(self.time_for_change_min, abs(self.displayed_hp - self.unit.get_hp()) * self.speed)
+            self.last_update = engine.get_time()
+
+        # Check to see if we should update
+        if self.transition_flag:
+            time = (engine.get_time() - self.last_update) / self.time_for_change
+            new_val = int(utils.lerp(self.old_hp, self.unit.get_hp(), time))
+            self.set_hp(new_val, mute)
+            if time >= 1:
+                self.set_hp(self.unit.get_hp(), mute)
+                self.old_hp = self.displayed_hp
+                self.transition_flag = False
         self.color_tick = int(engine.get_time() / 16.67) % len(self.colors)
 
-    def set_hp(self, val):
+    def set_hp(self, val, mute):
         current_time = engine.get_time()
         if self.displayed_hp < self.unit.get_hp() and current_time - self.heal_sound_update > self.speed:
             self.heal_sound_update = current_time
-            get_sound_thread().stop_sfx('HealBoop')
-            get_sound_thread().play_sfx('HealBoop')
+            if not mute:
+                get_sound_thread().stop_sfx('HealBoop')
+                get_sound_thread().play_sfx('HealBoop')
         super().set_hp(val)
 
     def big_number(self) -> bool:

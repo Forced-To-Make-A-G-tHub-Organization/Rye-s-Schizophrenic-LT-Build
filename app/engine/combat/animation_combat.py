@@ -584,8 +584,8 @@ class AnimationCombat(BaseCombat, MockCombat):
             self.last_update = engine.get_time()
 
         # Update hp bars
-        self.left_hp_bar.update()
-        self.right_hp_bar.update()
+        self.left_hp_bar.update(False)
+        self.right_hp_bar.update(False)
 
         self.update_anims()
 

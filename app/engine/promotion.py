@@ -279,27 +279,6 @@ class PromotionState(State, MockCombat):
         self.name_tag = SPRITES.get('combat_name_right_' + color).copy()
         width = FONT['text-brown'].width(self.unit.name)
         FONT['text-brown'].blit(self.unit.name, self.name_tag, (36 - width // 2, 8))
-        
-        # Team
-        promotion_color = self.get_color(self.unit.team)
-        # Bar
-        self.promotion_bar = SPRITES.get('combat_main_crit_right_' + promotion_color).copy()
-        if self.combat_item:
-            name = self.combat_item.name
-            if text_width('text', name) > 56:
-                font = 'narrow'
-            else:
-                font = 'text'
-            render_text(self.promotion_bar, [font], [name], ['brown'], (WINWIDTH//4 - 13, 5 + 8), HAlignment.CENTER)
-            icon = icons.get_icon(self.combat_item)
-            if icon:
-                self.promotion_bar.blit(icon, (1 + 2, 9 + 4))
-        hit = '--'
-        damage = '--'
-        crit = '--'
-        FONT['number_small2'].blit_right(hit, self.promotion_bar, (WINWIDTH//2, 0))
-        FONT['number_small2'].blit_right(damage, self.promotion_bar, (WINWIDTH//2, 8))
-        FONT['number_small2'].blit_right(crit, self.promotion_bar, (WINWIDTH//2, 16))
                 
         self.promotion_hp_bar = CombatHealthBar(self.unit)
 
@@ -383,9 +362,30 @@ class PromotionState(State, MockCombat):
 
         # Name Tag
         combat_surf.blit(self.name_tag, (WINWIDTH + 3 - self.name_tag.get_width(), 0))
+
+        # Bar
+        self.promotion_bar = SPRITES.get('combat_main_crit_right_' + self.get_color(self.unit.team)).copy()
+        if self.combat_item:
+            name = self.combat_item.name
+            if text_width('text', name) > 56:
+                font = 'narrow'
+            else:
+                font = 'text'
+            render_text(self.promotion_bar, [font], [name], ['brown'], (WINWIDTH//4 - 13, 5 + 8), HAlignment.CENTER)
+            icon = icons.get_icon(self.combat_item)
+            if icon:
+                self.promotion_bar.blit(icon, (1 + 2, 9 + 4))
+        hit = '--'
+        damage = '--'
+        crit = '--'
+        FONT['number_small2'].blit_right(hit, self.promotion_bar, (WINWIDTH//2, 0))
+        FONT['number_small2'].blit_right(damage, self.promotion_bar, (WINWIDTH//2, 8))
+        FONT['number_small2'].blit_right(crit, self.promotion_bar, (WINWIDTH//2, 16))
+
+        self.promotion_hp_bar.update(True)
         self.promotion_hp_bar.draw(self.promotion_bar, 25, 30 + 7)
         combat_surf.blit(self.promotion_bar, (WINWIDTH//2 - self.promotion_bar.get_width()//2, WINHEIGHT - self.promotion_bar.get_height()))
-
+        
         self.color_ui(combat_surf)
 
         surf.blit(combat_surf, (0, 0))
