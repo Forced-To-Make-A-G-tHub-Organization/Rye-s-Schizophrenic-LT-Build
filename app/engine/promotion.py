@@ -247,7 +247,7 @@ class PromotionState(State, MockCombat):
         game.state.change('exp')
 
     def start(self):
-        self.create_background()
+        self.bg = background.create_background('promotion_background', False)
 
         music = 'music_%s' % self.name
         self.promotion_song = None
@@ -294,6 +294,12 @@ class PromotionState(State, MockCombat):
             icon = icons.get_icon(self.combat_item)
             if icon:
                 self.promotion_bar.blit(icon, (1 + 2, 9 + 4))
+        hit = '--'
+        damage = '--'
+        crit = '--'
+        FONT['number_small2'].blit_right(hit, self.promotion_bar, (WINWIDTH//2, 0))
+        FONT['number_small2'].blit_right(damage, self.promotion_bar, (WINWIDTH//2, 8))
+        FONT['number_small2'].blit_right(crit, self.promotion_bar, (WINWIDTH//2, 16))
                 
         self.promotion_hp_bar = CombatHealthBar(self.unit)
 
@@ -340,7 +346,7 @@ class PromotionState(State, MockCombat):
                 self.state = 'wait'
 
         elif self.state == 'wait':
-            if current_time > utils.frames2ms(100):
+            if current_time > utils.frames2ms(115):
                 self._finalize(engine.get_time())
 
         elif self.state == 'level_up':
@@ -370,12 +376,10 @@ class PromotionState(State, MockCombat):
         else:
             return surf
 
-        combat_surf = engine.copy_surface(self.combat_surf)
+        if self.current_battle_anim:
+            self.current_battle_anim.draw(surf)
 
-        # Platforms
-        top = WINHEIGHT - 72
-        combat_surf.blit(self.left_platform, (WINWIDTH//2 - self.left_platform.get_width(), top))
-        combat_surf.blit(self.right_platform, (WINWIDTH//2, top))
+        combat_surf = engine.copy_surface(self.combat_surf)
 
         # Name Tag
         combat_surf.blit(self.name_tag, (WINWIDTH + 3 - self.name_tag.get_width(), 0))
@@ -385,9 +389,6 @@ class PromotionState(State, MockCombat):
         self.color_ui(combat_surf)
 
         surf.blit(combat_surf, (0, 0))
-
-        if self.current_battle_anim:
-            self.current_battle_anim.draw(surf)
 
         self.foreground.draw(surf)
 
