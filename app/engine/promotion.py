@@ -346,7 +346,7 @@ class PromotionState(State, MockCombat):
                 self.state = 'wait'
 
         elif self.state == 'wait':
-            if current_time > utils.frames2ms(115):
+            if current_time > utils.frames2ms(100):
                 self._finalize(engine.get_time())
 
         elif self.state == 'level_up':
