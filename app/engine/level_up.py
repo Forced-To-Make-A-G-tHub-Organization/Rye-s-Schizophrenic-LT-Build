@@ -503,22 +503,27 @@ class LevelUpScreen():
                 self.start_time = current_time
 
         elif self.state == 'init_wait':
-            if current_time - self.start_time > 500:
-                if self.old_level == self.new_level:
+            if self.old_class.name != DB.classes.get(self.unit.klass).name:
+                if current_time - self.start_time > 500:
                     if self.flip_start_time == 0:
                         self.flip_start_time = current_time
                         get_sound_thread().play_sfx('Level_Up_Level')
                     if self.flip_start_time and current_time - self.flip_start_time > 167:
                         self.flipped = True
-                else:
+                if current_time - self.start_time > 850: # No level up spark
+                        self.state = 'get_next_spark'
+                        self.start_time = current_time
+            elif current_time - self.start_time > 500:
+                if self.old_level != self.new_level:
                     self.state = 'first_spark'
                     topleft = (87, 27)
                     self.animations.append(self.make_spark(topleft))
                     get_sound_thread().play_sfx('Level_Up_Level')
                     self.start_time = current_time
-            if self.old_level == self.new_level and current_time - self.start_time > 850: # No level up spark
-                self.state = 'get_next_spark'
-                self.start_time = current_time
+                else:
+                    self.state = 'get_next_spark'
+                    self.start_time = current_time
+                
 
         elif self.state == 'scroll_out':
             self.unit_scroll_offset += 10
@@ -606,7 +611,7 @@ class LevelUpScreen():
         else:
             FONT['text'].blit(klass, sprite_top, (12, 3))
         FONT['text-yellow'].blit('Lv', sprite_top, (self.width//2 + 12, 3))
-        if self.state in ('scroll_in', 'init_wait'):
+        if self.state in ('scroll_in', 'init_wait') and self.flipped == False:
             level = str(self.old_level)
         else:
             level = str(self.new_level)
