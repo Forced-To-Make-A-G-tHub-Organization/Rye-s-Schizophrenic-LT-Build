@@ -884,6 +884,7 @@ class TitleSaveState(State):
 
     flipped = False
     flip_update_text = ''
+    flip_update_color = ''
 
     def start(self):
         if game.memory.get('_skip_save', False):
@@ -986,7 +987,7 @@ class TitleSaveState(State):
                 level = DB.levels.get(next_level_nid)
                 if level:
                     self.flip_update_text = level.name
-            self.menu.set_color(self.menu.current_index, game.mode.color)
+            self.flip_update_color = game.mode.color
 
     def update(self):
         if self.menu:
@@ -1010,6 +1011,7 @@ class TitleSaveState(State):
 
         if self.wait_time and engine.get_time() - self.wait_time > 167 and not self.flipped:
             self.menu.set_text(self.menu.current_index, self.flip_update_text)
+            self.menu.set_color(self.menu.current_index, self.flip_update_color)
             self.flipped = True
 
     def draw(self, surf):
